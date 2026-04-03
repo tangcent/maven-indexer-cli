@@ -3,7 +3,7 @@ import { DB } from '../core/db/index.js';
 import { Indexer, Artifact } from '../core/indexer.js';
 import { SourceParser } from '../core/source_parser.js';
 import { ArtifactResolver } from '../core/artifact_resolver.js';
-import { GlobalOpts, resolveDbPath, assertIndexNotEmpty } from './shared.js';
+import { GlobalOpts, resolveDbPath } from './shared.js';
 import { print } from '../output.js';
 import { resolve as smartResolve } from '../smart_resolver.js';
 
@@ -22,8 +22,7 @@ export async function run(
   }
 
   const dbPath = resolveDbPath();
-  const db = DB.getInstance(dbPath);
-  assertIndexNotEmpty(db);
+  DB.getInstance(dbPath);
 
   const indexer = Indexer.getInstance();
 
@@ -34,6 +33,8 @@ export async function run(
     if (fqn) {
       resolvedClassName = fqn;
     }
+    // AC5/AC6: if fqn is null, fall through to index search with simple name;
+    // resolveOne will return a descriptive message if not found
   }
 
   const resultText = await resolveOne(indexer, resolvedClassName, type, opts.coordinate);

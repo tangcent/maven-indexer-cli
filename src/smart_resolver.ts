@@ -7,45 +7,45 @@ import { Indexer } from './core/indexer.js';
  * by searching the project source files and triggering a targeted index scan.
  */
 export async function resolve(simpleName: string, basePath: string): Promise<string | null> {
-  process.stderr.write(`[smart_resolver] Resolving '${simpleName}' from '${basePath}'\n`);
+  process.stderr.write(`Searching for '${simpleName}' in project sources under '${basePath}'...\n`);
 
   const candidates = await findSourceFiles(basePath, simpleName);
 
   if (candidates.length === 0) {
-    process.stderr.write(`[smart_resolver] No source files found matching '${simpleName}'\n`);
     return null;
   }
 
   for (const filePath of candidates) {
-    process.stderr.write(`[smart_resolver] Checking file: ${filePath}\n`);
+    process.stderr.write(`Found source file: ${filePath}\n`);
 
     const pkg = await extractPackage(filePath);
     if (!pkg) {
-      process.stderr.write(`[smart_resolver] No package declaration found in ${filePath}\n`);
+      process.stderr.write(`No package declaration found in ${filePath}, skipping.\n`);
       continue;
     }
 
     const fqn = `${pkg}.${simpleName}`;
-    process.stderr.write(`[smart_resolver] Constructed FQN: ${fqn}\n`);
+    process.stderr.write(`Resolved FQN: ${fqn}\n`);
 
-    // Extract top-2 package segments
+    // Extract top-2 package segments for targeted scan
     const segments = pkg.split('.');
     const topPackage = segments.slice(0, 2).join('.');
-    process.stderr.write(`[smart_resolver] Triggering targeted scan for groupIdPrefix: ${topPackage}\n`);
+    process.stderr.write(`Triggering targeted scan for groupId prefix '${topPackage}'...\n`);
 
     const indexer = Indexer.getInstance();
     await indexer.index({ groupIdPrefix: topPackage, quickScan: true });
 
-    process.stderr.write(`[smart_resolver] Re-querying index for FQN: ${fqn}\n`);
     const results = indexer.searchClass(fqn);
     const exact = results.find(r => r.className === fqn);
 
     if (exact) {
-      process.stderr.write(`[smart_resolver] Found FQN in index: ${fqn}\n`);
       return fqn;
     }
 
-    process.stderr.write(`[smart_resolver] FQN '${fqn}' not found in index after scan\n`);
+    process.stderr.write(
+      `Class '${fqn}' not found after targeted scan. ` +
+      `If this is a new dependency, try running 'maven-indexer-cli refresh-index' to rebuild the index.\n`
+    );
   }
 
   return null;

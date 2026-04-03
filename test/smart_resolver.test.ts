@@ -4,11 +4,8 @@ import path from 'path';
 import fs from 'fs';
 
 /**
- * Integration test: smart_resolver with unqualified class name.
- *
- * We create a temp dir with a sample MyClass.java file containing a package declaration,
- * then call resolve('MyClass', tmpDir) and assert it finds the package and constructs the FQN.
- * The Indexer.index call is mocked to avoid actual scanning.
+ * Unit tests for smart_resolver: resolves unqualified class names via source file search.
+ * Indexer.index is mocked to avoid actual scanning.
  */
 
 describe('smart_resolver: resolve unqualified class name', () => {
