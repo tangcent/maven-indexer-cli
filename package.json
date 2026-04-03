@@ -1,0 +1,29 @@
+{
+  "name": "maven-indexer-cli",
+  "version": "1.0.0",
+  "description": "CLI tool for querying the local Maven/Gradle artifact index",
+  "type": "module",
+  "bin": {
+    "maven-indexer-cli": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest --run"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "better-sqlite3": "^12.5.0",
+    "xml2js": "^0.6.2",
+    "semver": "^7.7.3",
+    "yauzl": "^3.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/node": "^25.0.2",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/xml2js": "^0.4.14",
+    "@types/semver": "^7.7.1",
+    "@types/yauzl": "^2.10.3",
+    "vitest": "^4.0.15"
+  }
+}
