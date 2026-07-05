@@ -8,11 +8,7 @@ export async function run(query: string, opts: { limit?: number } & GlobalOpts):
   assertIndexNotEmpty(db);
 
   const indexer = Indexer.getInstance();
-  let results = indexer.search(query);
-
-  if (opts.limit !== undefined) {
-    results = results.slice(0, opts.limit);
-  }
+  const results = indexer.search(query, opts.limit);
 
   print('search-artifacts', results, opts);
 }
