@@ -68,8 +68,8 @@ describe('refresh-index integration', () => {
     const { Config } = await import('../src/core/config.js');
     const { Indexer } = await import('../src/core/indexer.js');
 
-    // Reset singletons
-    (DB as any).instance = undefined;
+    // Reset singletons via public APIs (T5.4: no more (DB as any).instance hacks).
+    DB.reset();
     Config.reset();
     (Indexer as any).instance = undefined;
 
@@ -108,8 +108,8 @@ describe('refresh-index integration', () => {
     const { Config } = await import('../src/core/config.js');
     const { Indexer } = await import('../src/core/indexer.js');
 
-    // Reset singletons
-    (DB as any).instance = undefined;
+    // Reset singletons via public APIs (T5.4: no more (DB as any).instance hacks).
+    DB.reset();
     Config.reset();
     (Indexer as any).instance = undefined;
 

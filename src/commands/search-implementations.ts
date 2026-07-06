@@ -1,11 +1,12 @@
 import { DB } from '../core/db/index.js';
 import { Indexer } from '../core/indexer.js';
-import { GlobalOpts, resolveDbPath } from './shared.js';
+import { GlobalOpts, resolveDbPath, assertIndexNotEmpty } from './shared.js';
 import { print } from '../output.js';
 import { resolve as smartResolve } from '../smart_resolver.js';
 
-export async function run(className: string, opts: GlobalOpts): Promise<void> {
-  DB.getInstance(resolveDbPath());
+export async function run(className: string, opts: { limit?: number } & GlobalOpts): Promise<void> {
+  const db = DB.getInstance(resolveDbPath());
+  assertIndexNotEmpty(db);
   const indexer = Indexer.getInstance();
 
   let resolvedName = className;
@@ -19,7 +20,7 @@ export async function run(className: string, opts: GlobalOpts): Promise<void> {
     }
   }
 
-  const results = indexer.searchImplementations(resolvedName);
+  const results = indexer.searchImplementations(resolvedName, opts.limit);
 
   if (results.length === 0 && resolvedName === className) {
     // AC6: targeted scan didn't find it and no FQN was resolved

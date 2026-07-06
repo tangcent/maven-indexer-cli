@@ -1,9 +1,9 @@
-import path from 'path';
 import { DB } from '../core/db/index.js';
 import { Indexer, Artifact } from '../core/indexer.js';
 import { SourceParser } from '../core/source_parser.js';
 import { ArtifactResolver } from '../core/artifact_resolver.js';
-import { GlobalOpts, resolveDbPath } from './shared.js';
+import { resolveMainJar, resolveSourcesJar } from '../core/path_helpers.js';
+import { GlobalOpts, resolveDbPath, assertIndexNotEmpty } from './shared.js';
 import { print } from '../output.js';
 import { resolve as smartResolve } from '../smart_resolver.js';
 
@@ -21,8 +21,8 @@ export async function run(
     process.exit(1);
   }
 
-  const dbPath = resolveDbPath();
-  DB.getInstance(dbPath);
+  const db = DB.getInstance(resolveDbPath());
+  assertIndexNotEmpty(db);
 
   const indexer = Indexer.getInstance();
 
@@ -109,7 +109,7 @@ async function resolveOne(
 
   if (type === 'source' || type === 'docs') {
     if (artifact.hasSource) {
-      const sourceJarPath = path.join(artifact.abspath, `${artifact.artifactId}-${artifact.version}-sources.jar`);
+      const sourceJarPath = resolveSourcesJar(artifact);
       try {
         detail = await SourceParser.getClassDetail(sourceJarPath, resolvedClassName, type);
       } catch (e: any) {
@@ -118,10 +118,7 @@ async function resolveOne(
     }
 
     if (!detail) {
-      let mainJarPath = artifact.abspath;
-      if (!mainJarPath.endsWith('.jar')) {
-        mainJarPath = path.join(artifact.abspath, `${artifact.artifactId}-${artifact.version}.jar`);
-      }
+      const mainJarPath = resolveMainJar(artifact);
       try {
         detail = await SourceParser.getClassDetail(mainJarPath, resolvedClassName, type);
         if (detail && detail.source) {
@@ -133,10 +130,7 @@ async function resolveOne(
       }
     }
   } else {
-    let mainJarPath = artifact.abspath;
-    if (!mainJarPath.endsWith('.jar')) {
-      mainJarPath = path.join(artifact.abspath, `${artifact.artifactId}-${artifact.version}.jar`);
-    }
+    const mainJarPath = resolveMainJar(artifact);
     try {
       detail = await SourceParser.getClassDetail(mainJarPath, resolvedClassName, type);
     } catch (e: any) {

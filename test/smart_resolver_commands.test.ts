@@ -76,6 +76,7 @@ describe('get-class: smart resolver integration', () => {
     vi.doMock('../src/commands/shared.js', () => ({
       resolveDbPath: () => ':memory:',
       GlobalOpts: {},
+      assertIndexNotEmpty: () => {},
     }));
 
     const printCalls: any[] = [];
@@ -136,6 +137,7 @@ describe('get-class: smart resolver integration', () => {
     vi.doMock('../src/commands/shared.js', () => ({
       resolveDbPath: () => ':memory:',
       GlobalOpts: {},
+      assertIndexNotEmpty: () => {},
     }));
     vi.doMock('../src/output.js', () => ({ print: vi.fn() }));
 
@@ -203,6 +205,7 @@ describe('search-implementations: smart resolver integration', () => {
     }));
     vi.doMock('../src/commands/shared.js', () => ({
       resolveDbPath: () => ':memory:',
+      assertIndexNotEmpty: () => {},
     }));
 
     const printCalls: any[] = [];
@@ -223,7 +226,7 @@ describe('search-implementations: smart resolver integration', () => {
     expect(mockIndexer.index).toHaveBeenCalledWith(
       expect.objectContaining({ groupIdPrefix: 'com.example', quickScan: true })
     );
-    expect(mockIndexer.searchImplementations).toHaveBeenCalledWith('com.example.MyInterface');
+    expect(mockIndexer.searchImplementations).toHaveBeenCalledWith('com.example.MyInterface', undefined);
     expect(printCalls[0]).toEqual([fakeImpl]);
   });
 
@@ -241,6 +244,7 @@ describe('search-implementations: smart resolver integration', () => {
     }));
     vi.doMock('../src/commands/shared.js', () => ({
       resolveDbPath: () => ':memory:',
+      assertIndexNotEmpty: () => {},
     }));
 
     const stderrMessages: string[] = [];

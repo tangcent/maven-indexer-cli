@@ -116,7 +116,7 @@ maven-indexer-cli refresh-index
 maven-indexer-cli refresh-index --full
 ```
 
-> **Note**: Query commands (`search-*`, `get-class`) never trigger automatic indexing. If the index is empty they exit immediately with a message telling you to run `refresh-index`. This keeps query latency predictable.
+> **Note**: Query commands may trigger a *targeted* scan via the smart resolver when given an unqualified class name; for fully-qualified names they never index. If the index is empty, query commands exit immediately with a hint to run `refresh-index`. This keeps query latency predictable for the common case.
 
 ## Configuration
 
