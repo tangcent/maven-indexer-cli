@@ -250,6 +250,22 @@ export interface MavenArtifactSpec {
 }
 
 /**
+ * Resets the DB, Config, and Indexer singletons so any open SQLite file
+ * handles are released before test fixtures are torn down.
+ *
+ * On Windows, deleting a file that is still open throws EBUSY, so this
+ * MUST be awaited before fs.rmSync(tmpDir, ...) in afterEach.
+ */
+export async function cleanupSingletons(): Promise<void> {
+  const { DB } = await import('../src/core/db/index.js');
+  const { Config } = await import('../src/core/config.js');
+  const { Indexer } = await import('../src/core/indexer.js');
+  DB.reset();
+  Config.reset();
+  (Indexer as any).instance = undefined;
+}
+
+/**
  * Creates a Maven-layout artifact in the repo directory.
  * Returns the artifact version directory path.
  */

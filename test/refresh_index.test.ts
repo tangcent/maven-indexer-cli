@@ -3,6 +3,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import Database from 'better-sqlite3';
+import { cleanupSingletons } from './helpers.js';
 
 /**
  * Integration tests for refresh-index quick/full scan modes.
@@ -56,8 +57,9 @@ describe('refresh-index integration', () => {
     process.env.DB_FILE = dbPath;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     delete process.env.DB_FILE;
+    await cleanupSingletons();
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
