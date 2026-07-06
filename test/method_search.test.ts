@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
-import { createMavenArtifact } from './helpers.js';
+import { createMavenArtifact, cleanupSingletons } from './helpers.js';
 
 /**
  * Tests method search (gated by INDEX_METHODS=1 env var).
@@ -51,8 +51,9 @@ describe('method search', () => {
     await indexer.index();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     delete process.env.INDEX_METHODS;
+    await cleanupSingletons();
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 

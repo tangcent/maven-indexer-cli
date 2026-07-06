@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import Database from 'better-sqlite3';
-import { createMavenArtifact } from './helpers.js';
+import { createMavenArtifact, cleanupSingletons } from './helpers.js';
 
 /**
  * Tests incremental indexing logic: mtime-based skipping, full-scan interval,
@@ -55,7 +55,8 @@ describe('incremental indexing', () => {
     indexer = Indexer.getInstance();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await cleanupSingletons();
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 

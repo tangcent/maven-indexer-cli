@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import Database from 'better-sqlite3';
-import { createMavenArtifact } from './helpers.js';
+import { createMavenArtifact, cleanupSingletons } from './helpers.js';
 
 /**
  * Tests the doctor command: reports missing artifacts and prunes them.
@@ -28,9 +28,10 @@ describe('doctor command', () => {
     process.env.DB_FILE = dbPath;
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     delete process.env.DB_FILE;
     vi.restoreAllMocks();
+    await cleanupSingletons();
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 

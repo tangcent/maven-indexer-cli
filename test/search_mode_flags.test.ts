@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import os from 'os';
 import path from 'path';
 import fs from 'fs';
-import { createMavenArtifact } from './helpers.js';
+import { createMavenArtifact, cleanupSingletons } from './helpers.js';
 
 /**
  * Tests search-mode flags on searchClass.
@@ -55,7 +55,8 @@ describe('searchClass mode flags', () => {
     await indexer.index();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await cleanupSingletons();
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 

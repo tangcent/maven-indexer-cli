@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import Database from 'better-sqlite3';
-import { createMavenArtifact } from './helpers.js';
+import { createMavenArtifact, cleanupSingletons } from './helpers.js';
 
 /**
  * Tests that shadow-table refresh preserves the old index on failure.
@@ -33,8 +33,9 @@ describe('shadow-table refresh preserves old index on failure', () => {
     fs.mkdirSync(repoDir, { recursive: true });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     vi.restoreAllMocks();
+    await cleanupSingletons();
     fs.rmSync(tmpDir, { recursive: true, force: true });
   });
 
