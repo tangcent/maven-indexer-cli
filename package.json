@@ -1,30 +1,7 @@
 {
   "name": "maven-indexer-cli",
   "version": "1.0.1",
-  "description": "CLI tool for querying the local Maven/Gradle artifact index",
-  "type": "module",
-  "bin": {
-    "maven-indexer-cli": "dist/cli.js"
-  },
-  "scripts": {
-    "build": "tsc",
-    "test": "vitest --run"
-  },
-  "dependencies": {
-    "better-sqlite3": "^12.5.0",
-    "chokidar": "^5.0.0",
-    "commander": "^12.0.0",
-    "semver": "^7.7.3",
-    "xml2js": "^0.6.2",
-    "yauzl": "^3.2.0"
-  },
-  "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^25.0.2",
-    "@types/semver": "^7.7.1",
-    "@types/xml2js": "^0.4.14",
-    "@types/yauzl": "^2.10.3",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.15"
-  }
+  "description": "DEPRECATED repository — active development moved to maven-index. This package.json is frozen; the maven-indexer-cli npm package is now published from https://github.com/tangcent/maven-index/tree/main/packages/cli.",
+  "private": true,
+  "deprecated": true
 }
